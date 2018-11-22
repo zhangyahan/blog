@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  我的网站|个人信息
+{% endblock %}
+
+{% block nav_index_active %}
+  active
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        {% if user.is_authenticated %}
+        <h3>{{ user.username }}</h3>
+        <ul>
+          <li>昵称: {{ user.get_nickname }}&nbsp;&nbsp;&nbsp;<a href="{% url 'change_nickname' %}?from={{ request.get_pull_path }}">修改昵称</a></li>
+          <li>密码: ······<a href="">修改密码</a></li>
+          <li>
+            <span>
+              邮箱:
+              {% if user.email %}
+                  {{ user.email }}
+                {% else %}
+                  未绑定
+                <a href="{% url 'bind_email' %}?from={{ request.get_pull_path }}">绑定邮箱</a>
+                </span>
+              {% endif %}
+          </li>
+          <li><span>上一次登录时间:{{ user.last_login|date:'Y-m-d H-i-s' }}</span></li>
+        {% else %}
+          <li style="list-style-type: none"><span>未登录, 正在跳转至首页...</span></li>
+          <script>
+              window.location.href = '/'
+          </script>
+        {% endif %}
+        </ul>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

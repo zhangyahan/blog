@@ -1,0 +1,29 @@
+使用Django富文本器
+django-ckeditor并注册
+from ckeditor.fields import RichTextField
+将文本内容字段修改为RichTextField()
+
+上传图片功能
+安装pillow
+将ckeditor_uploader注册到应用
+
+在settings文件中配置以下变量
+# 配置meida
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# 配置ckeditor
+CKEDITOR_UPLOAD_PATH = 'upload/'
+
+from ckeditor_uploader.fields import RichTextUploadingField
+将models模块中的文本内容字段RichTextUploadingField()
+
+接下来在主路由中配置以下操作
+from django.conf import settings
+from django.conf.urls.static import static
+
+url(r'^ckeditorupload/', include('ckeditor_uploader.urls')),
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+

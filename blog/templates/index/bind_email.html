@@ -1,0 +1,14 @@
+{% extends 'form.html' %}
+{% load static %}
+
+
+
+
+
+{% block from_url %}
+  action="{% url 'bind_email' %}"
+{% endblock %}
+
+{% block other_buttom %}
+  <a id="send_code" class="btn btn-primary">发送验证码</a>
+{% endblock %}

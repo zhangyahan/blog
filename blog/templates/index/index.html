@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load index_tags %}
+{% block title %}
+  主页
+{% endblock %}
+
+{#css样式#}
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block nav_index_active %}active{% endblock %}
+
+{% block content %}
+  <h3 class="content">欢迎访问我的网站</h3>
+
+
+  <!-- 图表容器 DOM -->
+  <div id="container" style="width: 600px;height:400px;"></div>
+
+  <div class="hot-blog">
+    <h3>今天热门博客</h3>
+    <ul>
+      {% for hot in today_hot_data %}
+        <li><a href="{% url 'blog_content' hot.object_id %}">{{ hot.content_object }}({{ hot.blog_read }})</a></li>
+      {% empty %}
+        <li>今天暂时没有热门博客</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="hot-blog">
+    <h3>昨天热门博客</h3>
+    <ul>
+      {% for hot in yesterday_hot_data %}
+        <li><a href="{% url 'blog_content' hot.object_id %}">{{ hot.content_object }}({{ hot.blog_read }})</a></li>
+      {% empty %}
+        <li>昨天暂时没有热门博客</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="hot-blog">
+    <h3>七日热门博客</h3>
+    <ul>
+      {% for hot in hot_data_for_7_days %}
+        <li><a href="{% url 'blog_content' hot.object_id %}">{% get_blog_title hot.object_id %}({{ hot.read_num_sum }})</a></li>
+      {% empty %}
+        <li>七日暂时没有热门博客</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- 引入 highcharts.js -->
+  <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+  <script>
+      // 图表配置
+      var options = {
+          chart: {
+              type: 'line'                          //指定图表的类型，默认是折线图（line）
+          },
+          title: {
+              text: null                 // 标题
+          },
+          xAxis: {
+              categories: {{ days|safe }},   // x 轴分类
+              tickmarkPlacement: 'on',
+          },
+          yAxis: {
+              title: { text: null },
+              labels: { enabled: false },
+              gridLineDashStyle: 'Dash',
+          },
+          series: [{                              // 数据列
+              name: '前七日阅读量',                        // 数据列名
+              data: {{ read_nums }},                    // 数据
+          }],
+          plotOptions: {
+              line: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+          },
+          {#legend: { enabled: false },#}
+          credits: { enabled: false },
+      };
+      // 图表初始化函数
+      var chart = Highcharts.chart('container', options);
+  </script>
+{% endblock %}
